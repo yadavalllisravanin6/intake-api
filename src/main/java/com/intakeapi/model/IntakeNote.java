@@ -23,6 +23,10 @@ public class IntakeNote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "patientId is required")
+    @Column(nullable = false)
+    private String patientId;   // synthetic identifier, e.g. "P-1001" - NOT a real patient's info
+
     @NotNull(message = "patientAge is required")
     @Min(value = 0, message = "patientAge must be >= 0")
     @Column(nullable = false)
@@ -41,13 +45,18 @@ public class IntakeNote {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    // Set by the /classify endpoint - null until classification has run
+    private String department;   // e.g. "Cardiology", "GeneralMedicine"
+    private String urgency;      // e.g. "LOW", "MEDIUM", "HIGH", "CRITICAL"
+
     // --- constructors ---
 
     public IntakeNote() {
         // required by JPA
     }
 
-    public IntakeNote(Integer patientAge, String symptomText) {
+    public IntakeNote(String patientId, Integer patientAge, String symptomText) {
+        this.patientId = patientId;
         this.patientAge = patientAge;
         this.symptomText = symptomText;
     }
@@ -60,6 +69,14 @@ public class IntakeNote {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
     }
 
     public Integer getPatientAge() {
@@ -92,5 +109,21 @@ public class IntakeNote {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getUrgency() {
+        return urgency;
+    }
+
+    public void setUrgency(String urgency) {
+        this.urgency = urgency;
     }
 }

@@ -1,27 +1,17 @@
-### Create an intake note
+### Create a note (auto-classified)
 POST http://localhost:8080/intake-notes
 Content-Type: application/json
 
 {
-  "patientAge": 45,
-  "symptomText": "Chest tightness for 2 days, worse with exertion, mild shortness of breath"
+  "patientAge": 60,
+  "symptomText": "Sudden crushing chest pain, sweating heavily, pain spreading to jaw"
 }
 
 ### List all intake notes
 GET http://localhost:8080/intake-notes
 
-### Get one note (change the id after you create one)
+### Get one note (change the id)
 GET http://localhost:8080/intake-notes/1
-
-### Update a note (change the id)
-PUT http://localhost:8080/intake-notes/1
-Content-Type: application/json
-
-{
-  "patientAge": 45,
-  "symptomText": "Updated: symptoms resolved after rest",
-  "status": "IN_REVIEW"
-}
 
 ### Delete a note (change the id)
 ###DELETE http://localhost:8080/intake-notes/1
