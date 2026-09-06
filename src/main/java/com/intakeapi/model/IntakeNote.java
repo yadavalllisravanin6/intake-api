@@ -48,6 +48,10 @@ public class IntakeNote {
     // Set by the /classify endpoint - null until classification has run
     private String department;   // e.g. "Cardiology", "GeneralMedicine"
     private String urgency;      // e.g. "LOW", "MEDIUM", "HIGH", "CRITICAL"
+    // Only populated when urgency is LOW - generic, non-diagnostic self-care note.
+    // Never shown for MEDIUM/HIGH/CRITICAL - those should prompt seeking care, not home tips.
+    @Column(length = 500)
+    private String selfCareNote;
 
     // --- constructors ---
 
@@ -77,6 +81,14 @@ public class IntakeNote {
 
     public void setPatientId(String patientId) {
         this.patientId = patientId;
+    }
+
+    public String getSelfCareNote() {
+        return selfCareNote;
+    }
+
+    public void setSelfCareNote(String selfCareNote) {
+        this.selfCareNote = selfCareNote;
     }
 
     public Integer getPatientAge() {

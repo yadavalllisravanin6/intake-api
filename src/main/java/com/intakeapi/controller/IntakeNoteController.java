@@ -1,9 +1,11 @@
 package com.intakeapi.controller;
 
+import com.intakeapi.dto.CreateIntakeNoteRequest;
 import com.intakeapi.model.IntakeNote;
 import com.intakeapi.repository.IntakeNoteRepository;
 import com.intakeapi.service.OllamaClassificationService;
 import com.intakeapi.service.ClassificationResult;
+import com.intakeapi.service.SelfCareService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,23 +19,34 @@ public class IntakeNoteController {
 
     private final IntakeNoteRepository intakeNoteRepository;
     private final OllamaClassificationService classificationService;
+    private final SelfCareService selfCareService;
 
-    // Constructor injection - Spring wires both dependencies in automatically
+    // Constructor injection - Spring wires all three dependencies in automatically
     public IntakeNoteController(IntakeNoteRepository intakeNoteRepository,
-                                OllamaClassificationService classificationService) {
+                                OllamaClassificationService classificationService,
+                                SelfCareService selfCareService) {
         this.intakeNoteRepository = intakeNoteRepository;
         this.classificationService = classificationService;
+        this.selfCareService = selfCareService;
     }
 
-    // POST /intake-notes - create a new note AND classify it automatically
+    // POST /intake-notes - create a new note AND classify it automatically.
+    // Uses CreateIntakeNoteRequest (not IntakeNote directly) so the API only
+    // exposes the fields a client should actually send - not id, status,
+    // department, urgency, createdAt, which are all server-controlled.
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public IntakeNote createIntakeNote(@Valid @RequestBody IntakeNote note) {
-        IntakeNote newNote = new IntakeNote(note.getPatientId(), note.getPatientAge(), note.getSymptomText());
+    public IntakeNote createIntakeNote(@Valid @RequestBody CreateIntakeNoteRequest request) {
+        IntakeNote newNote = new IntakeNote(request.getPatientId(), request.getPatientAge(), request.getSymptomText());
+
         // Classify immediately based on the symptom text, before saving
         ClassificationResult result = classificationService.classify(newNote.getSymptomText());
         newNote.setDepartment(result.getDepartment());
         newNote.setUrgency(result.getUrgency());
+
+        // Self-care note is generic and ONLY ever populated for LOW urgency -
+        // see SelfCareService for why this is deliberately restricted.
+        newNote.setSelfCareNote(selfCareService.getNoteForUrgency(result.getUrgency()));
 
         return intakeNoteRepository.save(newNote);
     }
@@ -89,6 +102,7 @@ public class IntakeNoteController {
         ClassificationResult result = classificationService.classify(note.getSymptomText());
         note.setDepartment(result.getDepartment());
         note.setUrgency(result.getUrgency());
+        note.setSelfCareNote(selfCareService.getNoteForUrgency(result.getUrgency()));
 
         return intakeNoteRepository.save(note);
     }
