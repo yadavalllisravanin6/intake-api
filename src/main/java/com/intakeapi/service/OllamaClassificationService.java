@@ -14,7 +14,7 @@ import java.util.Map;
 @Service
 public class OllamaClassificationService {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${ollama.base-url}")
@@ -22,6 +22,10 @@ public class OllamaClassificationService {
 
     @Value("${ollama.model}")
     private String model;
+
+    public OllamaClassificationService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     public ClassificationResult classify(String symptomText) {
         String prompt = """
