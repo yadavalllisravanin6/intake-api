@@ -3,6 +3,7 @@ package com.intakeapi.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -12,7 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 
 @Service
-public class OllamaClassificationService {
+@Profile("local")
+public class OllamaClassificationService implements ClassificationService {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();

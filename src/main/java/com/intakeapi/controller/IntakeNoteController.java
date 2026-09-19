@@ -3,8 +3,8 @@ package com.intakeapi.controller;
 import com.intakeapi.dto.CreateIntakeNoteRequest;
 import com.intakeapi.model.IntakeNote;
 import com.intakeapi.repository.IntakeNoteRepository;
-import com.intakeapi.service.OllamaClassificationService;
 import com.intakeapi.service.ClassificationResult;
+import com.intakeapi.service.ClassificationService;
 import com.intakeapi.service.SelfCareService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -18,12 +18,12 @@ import java.util.List;
 public class IntakeNoteController {
 
     private final IntakeNoteRepository intakeNoteRepository;
-    private final OllamaClassificationService classificationService;
+    private final ClassificationService classificationService;
     private final SelfCareService selfCareService;
 
     // Constructor injection - Spring wires all three dependencies in automatically
     public IntakeNoteController(IntakeNoteRepository intakeNoteRepository,
-                                OllamaClassificationService classificationService,
+                                ClassificationService classificationService,
                                 SelfCareService selfCareService) {
         this.intakeNoteRepository = intakeNoteRepository;
         this.classificationService = classificationService;
