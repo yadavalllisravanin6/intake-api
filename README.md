@@ -4,7 +4,7 @@ This is Step 1 of the **Patient Intake & Symptom Triage Assistant** project:
 a plain Spring Boot REST API with no AI in it yet. The goal is a solid,
 well-understood foundation before adding any LLM calls in Step 2.
 
-> ⚠️ **Use synthetic/fake data only.** Never enter real patient information
+> ⚠️ Use synthetic/fake data only. Never enter real patient information
 > into this app — there is no authentication, encryption, or audit logging
 > here. That's expected for a portfolio project, but it means the data must
 > always be made-up. This is worth stating explicitly in your project README
@@ -18,7 +18,9 @@ well-understood foundation before adding any LLM calls in Step 2.
 - Maven
 
 ## Run it
+🔗 **Live demo:** [https://intake-api-9hhf.onrender.com/swagger-ui/index.html](https://intake-api-9hhf.onrender.com/swagger-ui/index.html)
 
+> Note: this is hosted on Render's free tier, so it spins down after 15 minutes of inactivity — the first request after idle time may take 30-60 seconds to wake up. Also note: the live version uses Groq (a hosted LLM) instead of the local Ollama setup described below, since free hosting can't run a local model — see the "AI model used" section for why.
 ```bash
 mvn spring-boot:run
 ```
